@@ -1,0 +1,198 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: Timo.Lakner@mail.schwarz
+    name: ODJ Training-Team
+  description: Simple AddressBook API to manage contacts
+  title: Contacts
+  version: "1.0"
+servers:
+- url: http://localhost:8080/addressbook/v1
+tags:
+- description: "API endpoints to retrieve, change, create or delete Contacts."
+  name: Contacts
+paths:
+  /contacts:
+    get:
+      description: Get the list of contacts.
+      operationId: getContacts
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/Contact'
+                type: array
+          description: OK
+        "500":
+          content: {}
+          description: Internal Server Error
+      summary: Get the list of contacts
+      tags:
+      - Contacts
+    post:
+      description: Creates a new contact; the contact data in the request body does
+        not include the ID
+      operationId: createContact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+        description: The contact to create.
+        required: false
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Contact'
+          description: OK
+        "412":
+          content: {}
+          description: Precondition Failed
+      summary: Creates a new contact
+      tags:
+      - Contacts
+      x-codegen-request-body-name: contact
+  /contacts/{ID}:
+    delete:
+      description: Deletes the Contact specified by ID
+      operationId: deleteContact
+      parameters:
+      - in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+          x-exportParamName: ID
+        style: simple
+        x-exportParamName: ID
+      responses:
+        "200":
+          content: {}
+          description: OK
+        "400":
+          content: {}
+          description: Bad Request
+        "404":
+          content: {}
+          description: Not Found
+        "500":
+          content: {}
+          description: Internal Server Error
+      summary: Deletes the Contact specified by ID
+      tags:
+      - Contacts
+    get:
+      description: Get the Contact specified by ID.
+      operationId: getContact
+      parameters:
+      - explode: false
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+          x-exportParamName: ID
+        style: simple
+        x-exportParamName: ID
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Contact'
+          description: OK
+        "400":
+          content: {}
+          description: Bad Request
+        "404":
+          content: {}
+          description: Not Found
+        "500":
+          content: {}
+          description: Internal Server Error
+      summary: Get the Contact specified by ID
+      tags:
+      - Contacts
+    put:
+      description: Updates an existing contact
+      operationId: updateContact
+      parameters:
+      - explode: false
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+          x-exportParamName: ID
+        style: simple
+        x-exportParamName: ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+        description: The contact to update.
+        required: false
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Contact'
+          description: OK
+        "412":
+          content: {}
+          description: Precondition Failed
+      summary: Updates an existing contact
+      tags:
+      - Contacts
+      x-codegen-request-body-name: contact
+components:
+  schemas:
+    Contact:
+      description: Represents a Contact entry.
+      example:
+        firstName: Steve
+        lastName: Jobs
+        zipCode: "40235"
+        city: Düsseldorf
+        phone: +49 545 272 12
+        street: Schlüterstr. 64
+        ID: 91726
+        email: Steve.Jobs@apple.com
+      properties:
+        ID:
+          description: ID of the contact
+          type: integer
+        firstName:
+          description: first name of the contact
+          type: string
+        lastName:
+          description: last name of the contact
+          type: string
+        street:
+          description: street of home address of the contact
+          type: string
+        zipCode:
+          description: ZIP code of home address of the contact
+          type: string
+        city:
+          description: city of home address of the contact
+          type: string
+        email:
+          description: email address of the contact
+          format: email
+          type: string
+        phone:
+          description: phone number of the contact
+          type: string
+      required:
+      - firstName
+      - lastName
+      title: Contact
+      type: object
+x-original-swagger-version: "2.0"
